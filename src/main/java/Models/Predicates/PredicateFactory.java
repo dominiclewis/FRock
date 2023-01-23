@@ -1,27 +1,32 @@
 package Models.Predicates;
 
-import java.util.Arrays;
 import java.util.List;
 
+import static Models.Predicates.BasePredicate.Predicate;
+import static java.util.Arrays.asList;
+
+/**
+ * Public interface for interacting with filtering predicates.
+ */
 public class PredicateFactory
 {
     private PredicateFactory()
     {
     }
 
-    public static BasePredicate getPredicate(final BasePredicate.Predicate _predicate, final List<String> attributes)
+    public static BasePredicate getPredicate(final Predicate _predicate, final List<Object> attributes)
     {
-        if (Arrays.asList(BooleanPrediciate.ALLOW_LISTS).contains(_predicate))
+        if (asList(BooleanPredicate.ALLOW_LISTS).contains(_predicate))
         {
-            return new BooleanPrediciate(_predicate, attributes);
+            return new BooleanPredicate(_predicate, attributes);
         }
 
-        if (Arrays.asList(ComparativePredicate.ALLOW_LISTS).contains(_predicate))
+        if (asList(ComparativePredicate.ALLOW_LISTS).contains(_predicate))
         {
             return new ComparativePredicate(_predicate, attributes);
         }
 
-        if (Arrays.asList(ConnectivePredicate.ALLOW_LISTS).contains(_predicate))
+        if (asList(ConnectivePredicate.ALLOW_LISTS).contains(_predicate))
         {
             return new ConnectivePredicate(_predicate, attributes);
         }

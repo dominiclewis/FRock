@@ -1,11 +1,13 @@
 package Models;
 
-import static Utilities.Utils.nullChecker;
 import lombok.Getter;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
+
+import static Models.Sort.Attribute;
 
 /**
  * Model for users
@@ -14,7 +16,7 @@ import java.util.UUID;
 public class User
 {
     private final UUID userId;
-    private final Map<Sort.Attribute, String> attributes;
+    private final Map<Attribute, String> attributes;
 
     public User()
     {
@@ -23,17 +25,14 @@ public class User
     }
 
     /**
-     * @see Sort.Attribute
      * @param value - Attribute value
+     *
+     * @see Attribute
      */
-    public void upsert_attribute(final Sort.Attribute key, final String value)
+    public void upsert_attribute(final Attribute key, final String value)
     {
-        nullChecker(key, "upsert user key");
-        nullChecker(value, "upsert user value");
+        Objects.requireNonNull(key, "upsert user key");
+        Objects.requireNonNull(value, "upsert user value");
         attributes.put(key, value);
     }
-
-    /**
-     *
-     */
 }

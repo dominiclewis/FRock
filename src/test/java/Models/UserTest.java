@@ -3,6 +3,8 @@ package Models;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import static Models.Sort.Attribute.FORENAME;
+import static Models.Sort.Attribute.JOB_TITLE;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
 
@@ -29,35 +31,33 @@ public class UserTest
     {
         final String forename = "Dom";
         final String jobTitle = "Software Engineer";
-        _user.upsert_attribute(Sort.Attribute.FORENAME, forename);
-        _user.upsert_attribute(Sort.Attribute.JOB_TITLE, jobTitle);
-        assertEquals(_user.getAttributes().get(Sort.Attribute.FORENAME), forename);
-        assertEquals(_user.getAttributes().get(Sort.Attribute.JOB_TITLE), jobTitle);
+        _user.upsert_attribute(FORENAME, forename);
+        _user.upsert_attribute(JOB_TITLE, jobTitle);
+        assertEquals(_user.getAttributes().get(FORENAME), forename);
+        assertEquals(_user.getAttributes().get(JOB_TITLE), jobTitle);
     }
 
     @Test
     public void testUpsertAttribute()
     {
         String forename = "Dom";
-        _user.upsert_attribute(Sort.Attribute.FORENAME, forename);
-        assertEquals(_user.getAttributes().get(Sort.Attribute.FORENAME), forename);
+        _user.upsert_attribute(FORENAME, forename);
+        assertEquals(_user.getAttributes().get(FORENAME), forename);
 
         forename = "NotDom";
-        _user.upsert_attribute(Sort.Attribute.FORENAME, forename);
-        assertEquals(_user.getAttributes().get(Sort.Attribute.FORENAME), forename);
+        _user.upsert_attribute(FORENAME, forename);
+        assertEquals(_user.getAttributes().get(FORENAME), forename);
     }
 
-    @Test(expectedExceptions = RuntimeException.class,
-            expectedExceptionsMessageRegExp = "Null passed while trying to upsert user key" )
+    @Test(expectedExceptions = NullPointerException.class, expectedExceptionsMessageRegExp = "upsert user key")
     public void testNullUpsertKey()
     {
      _user.upsert_attribute(null, "foo");
     }
 
-    @Test(expectedExceptions = RuntimeException.class,
-            expectedExceptionsMessageRegExp = "Null passed while trying to upsert user value" )
+    @Test(expectedExceptions = NullPointerException.class, expectedExceptionsMessageRegExp = "upsert user value")
     public void testNullUpsertValue()
     {
-        _user.upsert_attribute(Sort.Attribute.JOB_TITLE, null);
+        _user.upsert_attribute(JOB_TITLE, null);
     }
 }

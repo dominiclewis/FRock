@@ -1,6 +1,7 @@
 package Models.Predicates;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -11,7 +12,13 @@ import java.util.List;
 
 public class PredicateFactoryTest
 {
-    private final List<String> attributes = new ArrayList<>();
+    private List<Object> attributes;
+
+    @BeforeMethod()
+    public void setup()
+    {
+        this.attributes = new ArrayList<>();
+    }
 
     @DataProvider(name = "generateComparativePredicates")
     public Iterator<BasePredicate.Predicate> generateComparativePredicates()
@@ -22,7 +29,7 @@ public class PredicateFactoryTest
     @DataProvider(name = "generateBooleanPredicates")
     public Iterator<BasePredicate.Predicate> generateBooleanPredicates()
     {
-        return Arrays.stream(BooleanPrediciate.ALLOW_LISTS).iterator();
+        return Arrays.stream(BooleanPredicate.ALLOW_LISTS).iterator();
     }
 
     @DataProvider(name = "generateConnectivePredicates")
@@ -34,18 +41,24 @@ public class PredicateFactoryTest
     @Test(dataProvider = "generateComparativePredicates")
     public void testGetComparativePredicate(final BasePredicate.Predicate predicate)
     {
-        Assert.assertTrue(PredicateFactory.getPredicate(predicate, attributes) instanceof ComparativePredicate);
+        this.attributes.add("foo");
+        this.attributes.add("bar");
+        Assert.assertTrue(PredicateFactory.getPredicate(predicate, this.attributes) instanceof ComparativePredicate);
     }
 
     @Test(dataProvider = "generateBooleanPredicates")
     public void testGetBooleanPredicate(final BasePredicate.Predicate predicate)
     {
-        Assert.assertTrue(PredicateFactory.getPredicate(predicate, attributes) instanceof BooleanPrediciate);
+        this.attributes.add("foo");
+        Assert.assertTrue(PredicateFactory.getPredicate(predicate, this.attributes) instanceof BooleanPredicate);
     }
 
     @Test(dataProvider = "generateConnectivePredicates")
     public void testGetConnectivePredicate(final BasePredicate.Predicate predicate)
     {
-        Assert.assertTrue(PredicateFactory.getPredicate(predicate, attributes) instanceof ConnectivePredicate);
+        this.attributes.add("foo");
+        this.attributes.add("bar");
+        this.attributes.add("bob");
+        Assert.assertTrue(PredicateFactory.getPredicate(predicate, this.attributes) instanceof ConnectivePredicate);
     }
 }

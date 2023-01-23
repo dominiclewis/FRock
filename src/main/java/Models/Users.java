@@ -12,15 +12,14 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static Utilities.Utils.nullChecker;
+import static java.util.Objects.requireNonNull;
+import static java.util.Objects.requireNonNullElseGet;
 
 /**
  * Store of all users known
  */
 public class Users
 {
-    // Consider access linked hashmap https://www.baeldung.com/java-linked-hashmap
-
     private static Users users;
     private static Map<UUID, User> ALL_USERS;
 
@@ -33,7 +32,7 @@ public class Users
         if (users == null)
         {
             users = new Users();
-            ALL_USERS = Objects.requireNonNullElseGet(existingUsers, HashMap::new);
+            ALL_USERS = requireNonNullElseGet(existingUsers, HashMap::new);
         }
         return users;
     }
@@ -47,19 +46,19 @@ public class Users
      * @return user ID UUID
      */
 
-    public UUID addAttributesToUser(final UUID userId, final Map<Sort.Attribute, String> attributes)
+    public UUID addAttributesToUser(final UUID userId, final Map<Attribute, String> attributes)
     {
         final User user;
 
-        nullChecker(attributes, "attribute map passed while trying to upsert");
+        requireNonNull(attributes, "attribute map passed while trying to upsert");
 
-        final Map<Sort.Attribute, String> validAttributes = getValidAttributes(attributes);
+        final Map<Attribute, String> validAttributes = getValidAttributes(attributes);
 
         // Get existing user or create new
         user = ALL_USERS.getOrDefault(userId, new User());
 
         // Add to their attributes
-        for (Sort.Attribute attributeName : validAttributes.keySet())
+        for (Attribute attributeName : validAttributes.keySet())
         {
             user.upsert_attribute(attributeName, validAttributes.get(attributeName));
         }
@@ -76,7 +75,7 @@ public class Users
      */
     public User getUserById(final UUID userId)
     {
-        nullChecker(userId, "get user by id");
+        requireNonNull(userId, "get user by id");
         return ALL_USERS.getOrDefault(userId, null);
     }
 
@@ -91,7 +90,7 @@ public class Users
      */
     public List<User> getUser(final List<BasePredicate> filters)
     {
-        nullChecker(filters, "Filters during userSearch");
+        requireNonNull(filters, "Filters during userSearch");
         final List<User> matches = new ArrayList<>();
         boolean match;
 
@@ -102,7 +101,6 @@ public class Users
             {
                 // Check each user against a criteria
                 match = filter.filter(user);
-
                 if (!match)
                 {
                     break;
@@ -113,7 +111,6 @@ public class Users
                 matches.add(user);
             }
         }
-
         return matches;
     }
 
@@ -126,7 +123,7 @@ public class Users
      */
     public List<User> getUserByAttribute(final Map<Attribute, String> attributes)
     {
-        nullChecker(attributes, "attributes during user search");
+        requireNonNull(attributes, "attributes during user search");
 
         final List<User> matches = new ArrayList<>();
         boolean match;
@@ -135,7 +132,7 @@ public class Users
         {
             match = false;
             // For each user do they match the criteria
-            for (Sort.Attribute attributeType : attributes.keySet())
+            for (Attribute attributeType : attributes.keySet())
             {
                 // Does the user have the key?
                 String userResult = user.getAttributes().get(attributeType);
